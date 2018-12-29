@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SnipdataApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SnipdataApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(SnipdataApplication.class, args);
+  }
 
 }
 

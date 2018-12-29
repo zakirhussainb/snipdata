@@ -1,0 +1,8 @@
+{
+   "type" : "record",
+   "namespace" : "ZakCorp",
+   "name" : "SnipData",
+   "fields" : [
+      { "name" : "Content" , "type" : "string" }
+   ]
+}

@@ -1,0 +1,10 @@
+com/zakcorp/snipdata/service/Store.class
+com/zakcorp/snipdata/util/Constants.class
+com/zakcorp/snipdata/web/rest/WriteResource.class
+com/zakcorp/snipdata/config/HDFSConfiguration.class
+com/zakcorp/snipdata/util/WebUtility.class
+com/zakcorp/snipdata/domain/SnipInfo.class
+com/zakcorp/snipdata/repository/WriteRepository.class
+com/zakcorp/snipdata/service/WriteService.class
+com/zakcorp/snipdata/SnipdataApplication.class
+com/zakcorp/snipdata/domain/Snip.class
