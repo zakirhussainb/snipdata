@@ -69,7 +69,6 @@ public class SnipService {
   }
 
   private String saveToParquet(String pasteContent) throws IOException {
-    //    FileSystem fs = FileSystem.get(hdfsConfiguration.getHadoopConfiguration());
     SCHEMA = new Schema.Parser().parse(SCHEMA_LOC);
     System.out.println("SCHEMA..." + SCHEMA);
     String fileLocation = webUtility.getStorageLocationPrefix() + Constants.DELIMITER +
