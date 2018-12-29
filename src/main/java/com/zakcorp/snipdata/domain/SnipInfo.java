@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -27,11 +28,11 @@ public class SnipInfo implements Serializable {
   private String shortLink;
 
   @Column(name = "expiration_length")
-  private Long expirationLength;
+  private Long expirationLength = (long) 1440;
 
   @CreatedDate
   @Column(name = "created_date", nullable = false, updatable = false)
-  private LocalDateTime createdDate = LocalDateTime.now();
+  private LocalDateTime createdDate = LocalDateTime.now(ZoneId.of("UTC"));
 
   @LastModifiedDate
   @Column(name = "last_modified_date")
@@ -40,5 +41,8 @@ public class SnipInfo implements Serializable {
   @NotNull
   @Column(name = "paste_path", nullable = false)
   private String pastePath;
+
+  @Column(name = "is_archived")
+  private boolean isArchived = false;
 
 }

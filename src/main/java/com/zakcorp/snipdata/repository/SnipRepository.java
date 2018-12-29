@@ -10,6 +10,8 @@ package com.zakcorp.snipdata.repository;
 import com.zakcorp.snipdata.domain.SnipInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface SnipRepository extends JpaRepository<SnipInfo, Long> {

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +48,7 @@ public class WebUtility {
   public String sha1Hash(String str) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance("SHA1");
     md.update(str.getBytes());
-    return Base64.getEncoder().encodeToString(md.digest());
+    return Base62.encode(md.digest());
   }
 
   public String getDatePrefix() {
@@ -61,6 +63,10 @@ public class WebUtility {
 
   public String getRandomUUID() {
     return UUID.randomUUID().toString();
+  }
+
+  public LocalDateTime getCurrentTimeStamp() {
+    return LocalDateTime.now(ZoneId.of("UTC"));
   }
 
 }

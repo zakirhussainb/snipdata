@@ -10,7 +10,9 @@ package com.zakcorp.snipdata.domain;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneId;
 
 @Data
 public class Snip implements Serializable {
@@ -21,6 +23,6 @@ public class Snip implements Serializable {
 
   private String snipContent;
 
-  private Instant timestamp = Instant.now();
+  private Instant timestamp = Instant.now(Clock.system(ZoneId.of("UTC")));
 
 }

@@ -14,5 +14,5 @@ import java.util.Map;
 
 @Service
 public interface Store<T> {
-  Map<String, String> save(List<T> messages) throws IOException;
+  T saveToStorage(T content) throws IOException;
 }

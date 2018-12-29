@@ -13,7 +13,7 @@ import lombok.Data;
 public class ResponseVM {
     private String status;
     private int statusCode;
-    private Object data;
+    private String data;
     private String message;
 
     public ResponseVM() {

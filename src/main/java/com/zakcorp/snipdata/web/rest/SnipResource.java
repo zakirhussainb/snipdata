@@ -4,6 +4,8 @@ import com.zakcorp.snipdata.domain.Snip;
 import com.zakcorp.snipdata.service.SnipService;
 import com.zakcorp.snipdata.web.rest.vm.ResponseVM;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +45,14 @@ public class SnipResource {
     log.info("snipLink...{}", snipLink);
     ResponseVM response = new ResponseVM();
     response.setData(snipService.readSnip(snipLink));
-    log.info("response....{}", response);
+//    log.info("response....{}", response);
     return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @DeleteMapping("/delete")
+  @ResponseStatus(HttpStatus.OK)
+  public String deleteContent() {
+    return snipService.deleteSnip();
   }
 
 }
