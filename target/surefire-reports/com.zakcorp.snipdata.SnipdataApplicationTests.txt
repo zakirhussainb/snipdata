@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.zakcorp.snipdata.SnipdataApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.373 s - in com.zakcorp.snipdata.SnipdataApplicationTests

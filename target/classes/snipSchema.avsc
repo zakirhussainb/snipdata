@@ -1,8 +1,0 @@
-{
-   "type" : "record",
-   "name" : "SnipData",
-   "doc" : "A snip information content",
-   "fields" : [
-      { "name" : "content" , "type" : "string" }
-   ]
-}
