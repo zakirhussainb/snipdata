@@ -1,8 +1,8 @@
 {
    "type" : "record",
-   "namespace" : "ZakCorp",
    "name" : "SnipData",
+   "doc" : "A snip information content",
    "fields" : [
-      { "name" : "Content" , "type" : "string" }
+      { "name" : "content" , "type" : "string" }
    ]
 }

@@ -3,6 +3,7 @@ package com.zakcorp.snipdata.web.rest;
 import com.zakcorp.snipdata.domain.Snip;
 import com.zakcorp.snipdata.service.SnipService;
 import com.zakcorp.snipdata.web.rest.vm.ResponseVM;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,13 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class WriteResource {
+@Slf4j
+public class SnipResource {
 
   private final SnipService snipService;
 
   @Autowired
-  public WriteResource(SnipService snipService) {
+  public SnipResource(SnipService snipService) {
     this.snipService = snipService;
   }
 
@@ -35,11 +37,13 @@ public class WriteResource {
     return snipService.saveSnip(snip, request);
   }
 
-  @GetMapping(value = "/snipLink", params = { "snip_link" }, produces = { "application/json" })
+  @GetMapping("/snipLink/{snipLink}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ResponseEntity<ResponseVM> readContent(@RequestParam(value = "snip_link") String snipLink) {
+  public ResponseEntity<ResponseVM> readContent(@PathVariable String snipLink) {
+    log.info("snipLink...{}", snipLink);
     ResponseVM response = new ResponseVM();
     response.setData(snipService.readSnip(snipLink));
+    log.info("response....{}", response);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 

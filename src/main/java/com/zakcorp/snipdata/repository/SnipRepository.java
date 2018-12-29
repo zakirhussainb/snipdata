@@ -15,6 +15,6 @@ import java.util.Optional;
 public interface SnipRepository extends JpaRepository<SnipInfo, Long> {
 //  public String findOne
 //  select paste_path from snip_info where shortlink='';
-  String findPastePathByShortLink(String shortLink);
+  SnipInfo findOneByShortLink(String shortLink);
 
 }
