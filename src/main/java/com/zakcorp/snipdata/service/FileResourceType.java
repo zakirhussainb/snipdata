@@ -4,15 +4,16 @@
  * Maintainer : zakirhussainb2693@gmail.com
  * Stability  : stable
  */
+
 package com.zakcorp.snipdata.service;
 
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 @Service
-public interface Store<T> {
-  T saveToStorage(T content) throws IOException;
+public interface FileResourceType<T> {
+  T storeToFile(T filePath, T content) throws IOException;
+
+  T readFromFile(T filePath);
 }

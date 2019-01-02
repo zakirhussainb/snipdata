@@ -5,7 +5,7 @@
  * Stability  : stable
  */
 
-package com.zakcorp.snipdata.service.impl;
+package com.zakcorp.snipdata.service.store;
 
-public class HDFSFileStore {
+public class AmazonS3FileStore {
 }

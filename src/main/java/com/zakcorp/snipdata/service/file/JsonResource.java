@@ -5,7 +5,7 @@
  * Stability  : stable
  */
 
-package com.zakcorp.snipdata.service.impl;
+package com.zakcorp.snipdata.service.file;
 
-public class AmazonS3FileStore {
+public class JsonResource {
 }

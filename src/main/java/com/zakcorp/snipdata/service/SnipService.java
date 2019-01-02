@@ -10,25 +10,13 @@ package com.zakcorp.snipdata.service;
 import com.zakcorp.snipdata.domain.Snip;
 import com.zakcorp.snipdata.domain.SnipInfo;
 import com.zakcorp.snipdata.repository.SnipRepository;
-import com.zakcorp.snipdata.util.Constants;
 import com.zakcorp.snipdata.util.WebUtility;
 import com.zakcorp.snipdata.web.rest.SnipResource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.DatumWriter;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetReader;
-import org.apache.parquet.avro.AvroParquetWriter;
-import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.hadoop.ParquetReader;
-import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.hadoop.api.WriteSupport;
-import org.apache.parquet.hadoop.metadata.CompressionCodecName;
-import org.apache.parquet.hadoop.util.HadoopInputFile;
-import org.apache.parquet.io.InputFile;
-import org.apache.parquet.io.SeekableInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +25,11 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,18 +37,24 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class SnipService {
 
-  private static Schema SCHEMA;
-  private static final File SCHEMA_LOC = new File("//home//xedflix//zakir-local//mission//projects//snipdata//src//main//resources//snipSchema.avsc");
+  private static final File SCHEMA_LOC = new File(
+    "//home//xedflix//zakir-local//mission//projects//snipdata//src//main//resources//snipSchema.avsc");
+  private static final Logger deleteLog = LoggerFactory.getLogger(SnipResource.class.getName());
   private final SnipRepository snipRepository;
   private final WebUtility webUtility;
-  private static final Logger deleteLog = LoggerFactory.getLogger(SnipResource.class.getName());
   //  private final HDFSConfiguration hdfsConfiguration;
+  private final StoreType<String> storeType;
+  private final FileResourceType<String> fileResourceType;
+
   @Autowired
   public SnipService(
     SnipRepository snipRepository,
-    WebUtility webUtility) {
+    WebUtility webUtility, StoreType<String> storeType,
+    FileResourceType<String> fileResourceType) {
     this.snipRepository = snipRepository;
     this.webUtility = webUtility;
+    this.storeType = storeType;
+    this.fileResourceType = fileResourceType;
   }
 
   public String saveSnip(
@@ -67,22 +62,21 @@ public class SnipService {
     HttpServletRequest request) throws NoSuchAlgorithmException, IOException {
     webUtility.setRequest(request);
     snip.setIpAddress(webUtility.getClientIp());
-    log.info("ipAddress..." + webUtility.getClientIp());
-//    log.info("snip..." + snip);
     String ipAddress = snip.getIpAddress();
     Long timestamp = snip.getTimestamp().getEpochSecond();
     String pasteContent = snip.getSnipContent();
-    String shortLink = webUtility.sha1Hash(ipAddress + timestamp);
-    String fileLocation = saveToParquet(pasteContent);
+    String fileLocation = storeType.saveToStorage(pasteContent);
     SnipInfo snipInfo = new SnipInfo();
+    String shortLink = webUtility.sha1Hash(ipAddress + timestamp);
+    log.info("shortLink...." + shortLink);
     snipInfo.setShortLink(shortLink);
     snipInfo.setPastePath(fileLocation);
+    snipInfo.setIpAddress(ipAddress);
     snipRepository.save(snipInfo);
-    log.info("shortLink...." + shortLink);
     return shortLink;
   }
 
-  private String saveToParquet(String pasteContent) throws IOException {
+  /*private String saveToParquet(String pasteContent) throws IOException {
     Schema schema = new Schema.Parser().parse(SCHEMA_LOC);
     GenericRecord data = new GenericData.Record(schema);
     data.put("content", pasteContent);
@@ -98,14 +92,14 @@ public class SnipService {
       e.printStackTrace();
     }
     return fileLocation;
-  }
+  }*/
 
   public String readSnip(String shortLink) {
-    SnipInfo snipInfo = snipRepository.findOneByShortLink(shortLink);
-//    log.info("snipInfo....{}", snipInfo);
-    String filePath = snipInfo.getPastePath();
-//    log.info("filePath....{} ", filePath);
-    return readFromStorage(filePath);
+    SnipInfo snipInfo = snipRepository.findOneByShortLinkAndIsArchived(shortLink, false);
+    if (snipInfo == null) {
+      return "The sniplink you requested has been expired";
+    }
+    return fileResourceType.readFromFile(snipInfo.getPastePath());
   }
 
   public String readFromStorage(String filePath) {
@@ -114,7 +108,6 @@ public class SnipService {
     try {
       ParquetReader<GenericRecord> reader = AvroParquetReader.<GenericRecord>builder(path).build();
       GenericRecord result = reader.read();
-//      log.info("result data.....{} ", result.get("content"));
       response = result.get("content").toString();
     } catch (Exception e) {
       log.error("Exception in locating the requested file {} ", e);
@@ -132,10 +125,10 @@ public class SnipService {
       LocalDateTime currentTimeStamp = webUtility.getCurrentTimeStamp();
       long minutes = createdTimeStamp.until(currentTimeStamp, ChronoUnit.MINUTES);
       log.info("minutes....{} ", minutes);
-      if ( minutes > snip.getExpirationLength() && (!snip.isArchived()) ) {
-          snip.setArchived(true);
-          snipRepository.save(snip);
-          ids.add(snip.getId());
+      if (minutes > snip.getExpirationLength() && (!snip.isArchived())) {
+        snip.setArchived(true);
+        snipRepository.save(snip);
+        ids.add(snip.getId());
       }
     });
     return "Deleted " + ids.stream().

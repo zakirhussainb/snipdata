@@ -7,6 +7,7 @@
 
 package com.zakcorp.snipdata.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
+@Slf4j
 public class WebUtility {
 
   private HttpServletRequest request;
@@ -34,21 +36,21 @@ public class WebUtility {
   }
 
   public String getClientIp() {
-    String remoteAddr = "";
+    String remoteAddress = "";
 
     if (request != null) {
-      remoteAddr = request.getHeader("X-FORWARDED-FOR");
-      if (remoteAddr == null || remoteAddr.isEmpty()) {
-        remoteAddr = request.getRemoteAddr();
+      remoteAddress = request.getHeader("X-FORWARDED-FOR");
+      if (remoteAddress == null || remoteAddress.isEmpty()) {
+        remoteAddress = request.getRemoteAddr();
       }
     }
-    return remoteAddr;
+    return remoteAddress;
   }
 
   public String sha1Hash(String str) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance("SHA1");
     md.update(str.getBytes());
-    return Base62.encode(md.digest());
+    return Base64.getUrlEncoder().encodeToString(md.digest());
   }
 
   public String getDatePrefix() {

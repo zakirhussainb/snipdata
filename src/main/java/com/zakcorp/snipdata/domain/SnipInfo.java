@@ -28,7 +28,7 @@ public class SnipInfo implements Serializable {
   private String shortLink;
 
   @Column(name = "expiration_length")
-  private Long expirationLength = (long) 1440;
+  private Long expirationLength = (long) 2;
 
   @CreatedDate
   @Column(name = "created_date", nullable = false, updatable = false)
@@ -44,5 +44,9 @@ public class SnipInfo implements Serializable {
 
   @Column(name = "is_archived")
   private boolean isArchived = false;
+
+  @NotNull
+  @Column(name = "ip_address")
+  private String ipAddress;
 
 }
