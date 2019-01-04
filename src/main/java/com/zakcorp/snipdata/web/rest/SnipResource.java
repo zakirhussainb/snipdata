@@ -41,7 +41,7 @@ public class SnipResource {
 
   @GetMapping("/snipLink/{snipLink}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ResponseEntity<ResponseVM> readContent(@PathVariable String snipLink) {
+  public ResponseEntity<ResponseVM> readContent(@PathVariable String snipLink) throws IOException {
     log.info("snipLink...{}", snipLink);
     ResponseVM response = new ResponseVM();
     response.setData(snipService.readSnip(snipLink));

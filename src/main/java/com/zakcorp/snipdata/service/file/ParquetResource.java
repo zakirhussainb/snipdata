@@ -16,6 +16,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetReader;
 import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetReader;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -23,13 +24,14 @@ import java.io.IOException;
 
 @Component
 @Slf4j
+@Qualifier("parquet")
 public class ParquetResource implements FileResourceType<String> {
 
   private static final File SCHEMA_LOC = new File(
     "//home//xedflix//zakir-local//mission//projects//snipdata//src//main//resources//snipSchema.avsc");
 
   @Override
-  public String storeToFile(String filePath, String content) throws IOException {
+  public void storeToFile(String filePath, String content) throws IOException {
     Schema schema = new Schema.Parser().parse(SCHEMA_LOC);
     GenericRecord data = new GenericData.Record(schema);
     data.put("content", content);
@@ -41,7 +43,6 @@ public class ParquetResource implements FileResourceType<String> {
     } catch (Exception e) {
       log.error("Error in writing content to parquet file {} ", e);
     }
-    return filePath;
   }
 
   @Override

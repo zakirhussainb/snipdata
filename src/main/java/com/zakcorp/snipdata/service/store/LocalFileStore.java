@@ -12,6 +12,8 @@ import com.zakcorp.snipdata.service.StoreType;
 import com.zakcorp.snipdata.util.Constants;
 import com.zakcorp.snipdata.util.WebUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,21 +21,29 @@ import java.io.IOException;
 @Component
 public class LocalFileStore implements StoreType<String> {
 
+  @Autowired
   private final WebUtility webUtility;
-  private final FileResourceType<String> fileResourceType;
 
   @Autowired
-  public LocalFileStore(WebUtility webUtility, FileResourceType<String> fileResourceType) {
+  @Qualifier("txt")
+  private final FileResourceType<String> fileResourceType;
+
+  @Value("${application.file.resource}")
+  private String fileResource;
+
+  public LocalFileStore(
+    WebUtility webUtility,
+    @Qualifier("txt") FileResourceType<String> fileResourceType) {
     this.webUtility = webUtility;
     this.fileResourceType = fileResourceType;
   }
 
   @Override
   public String saveToStorage(String content) throws IOException {
-    String fileLocation = webUtility.getStorageLocationPrefix() + Constants.DELIMITER + "parquet" +
-      Constants.DELIMITER +
-      webUtility.getDatePrefix() +
-      Constants.DELIMITER + webUtility.getRandomUUID() + ".parquet";
+    String fileLocation =
+      webUtility.getStorageLocationPrefix() + Constants.DELIMITER + fileResource +
+        webUtility.getDatePrefix() +
+        Constants.DELIMITER + webUtility.getRandomUUID() + "." + fileResource;
     fileResourceType.storeToFile(fileLocation, content);
     return fileLocation;
   }

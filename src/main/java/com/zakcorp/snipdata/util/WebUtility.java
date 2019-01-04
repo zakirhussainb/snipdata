@@ -55,7 +55,8 @@ public class WebUtility {
 
   public String getDatePrefix() {
     LocalDate currentDate = LocalDate.now();
-    return currentDate.getYear() + Constants.DELIMITER + currentDate.getMonthValue() +
+    return Constants.DELIMITER + currentDate.getYear() + Constants.DELIMITER +
+      currentDate.getMonthValue() +
       Constants.DELIMITER + currentDate.getDayOfMonth();
   }
 

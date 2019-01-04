@@ -15,7 +15,9 @@ spring:
     hibernate:
       ddl-auto: update
 application:
+  file:
+    resource: parquet
   store:
     hadoop:
       default-fs: hdfs://localhost:9000
-    path: /tmp/snipdata-files
+    path: /home/xedflix/snips
