@@ -16,7 +16,7 @@ spring:
       ddl-auto: update
 application:
   file:
-    resource: parquet
+    resource: json
   store:
     hadoop:
       default-fs: hdfs://localhost:9000

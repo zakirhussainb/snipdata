@@ -10,6 +10,7 @@ package com.zakcorp.snipdata.service;
 import com.zakcorp.snipdata.domain.Snip;
 import com.zakcorp.snipdata.domain.SnipInfo;
 import com.zakcorp.snipdata.repository.SnipRepository;
+import com.zakcorp.snipdata.util.Constants;
 import com.zakcorp.snipdata.util.WebUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class SnipService {
   public SnipService(
     SnipRepository snipRepository,
     WebUtility webUtility, StoreType<String> storeType,
-    @Qualifier("txt") FileResourceType<String> fileResourceType) {
+    @Qualifier("json") FileResourceType<String> fileResourceType) {
     this.snipRepository = snipRepository;
     this.webUtility = webUtility;
     this.storeType = storeType;
@@ -89,7 +90,7 @@ public class SnipService {
     });
     return "Deleted " + ids.stream().
       map(Objects::toString).
-      collect(Collectors.joining(","));
+      collect(Collectors.joining(Constants.COMMA_SEPARATOR));
   }
 
 }

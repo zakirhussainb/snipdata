@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
@@ -70,6 +73,36 @@ public class WebUtility {
 
   public LocalDateTime getCurrentTimeStamp() {
     return LocalDateTime.now(ZoneId.of("UTC"));
+  }
+
+  public File createMultipleDirs(String dirPath) throws IOException {
+    File dir = new File(dirPath);
+    if (!dir.exists()) {
+      if (dir.mkdirs()) {
+        log.info("Multiple directories are created");
+      } else {
+        throw new IOException("Failed to create multiple directories " + dir.getParent());
+      }
+    }
+    return dir;
+  }
+
+  public File createFile(File dirPath, String fileName) throws IOException {
+    File file = new File(dirPath + Constants.DELIMITER + fileName);
+    if (file.createNewFile()) {
+      log.info("File is created");
+    } else {
+      throw new IOException("Failed to create file " + file.getPath());
+    }
+    return file;
+  }
+
+  public void writeToFile(File file, String content) {
+    try (FileWriter writer = new FileWriter(file)) {
+      writer.write(content);
+    } catch (Exception e) {
+      log.error("Exception in writing to file {}", e);
+    }
   }
 
 }

@@ -11,5 +11,9 @@ public class Constants {
 
   public static final String FS_DEFAULTFS = "fs.defaultFS";
   public static final String DELIMITER = "/";
+  public static final String DOT = ".";
+  public static final String COMMA_SEPARATOR = ",";
+  public static final String CONTENT = "content";
+
 
 }

@@ -25,7 +25,7 @@ public class LocalFileStore implements StoreType<String> {
   private final WebUtility webUtility;
 
   @Autowired
-  @Qualifier("txt")
+  @Qualifier("json")
   private final FileResourceType<String> fileResourceType;
 
   @Value("${application.file.resource}")
@@ -33,18 +33,17 @@ public class LocalFileStore implements StoreType<String> {
 
   public LocalFileStore(
     WebUtility webUtility,
-    @Qualifier("txt") FileResourceType<String> fileResourceType) {
+    @Qualifier("json") FileResourceType<String> fileResourceType) {
     this.webUtility = webUtility;
     this.fileResourceType = fileResourceType;
   }
 
   @Override
   public String saveToStorage(String content) throws IOException {
-    String fileLocation =
+    String dirPath =
       webUtility.getStorageLocationPrefix() + Constants.DELIMITER + fileResource +
-        webUtility.getDatePrefix() +
-        Constants.DELIMITER + webUtility.getRandomUUID() + "." + fileResource;
-    fileResourceType.storeToFile(fileLocation, content);
-    return fileLocation;
+        webUtility.getDatePrefix();
+    String fileName = webUtility.getRandomUUID() + Constants.DOT + fileResource;
+    return fileResourceType.storeToFile(dirPath, fileName, content);
   }
 }

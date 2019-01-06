@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Service
 public interface FileResourceType<T> {
-  void storeToFile(T filePath, T content) throws IOException;
+  T storeToFile(T dirPath, T file, T content) throws IOException;
 
   T readFromFile(T filePath) throws IOException;
 }

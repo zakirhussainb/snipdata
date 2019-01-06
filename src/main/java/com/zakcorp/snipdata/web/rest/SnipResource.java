@@ -45,7 +45,6 @@ public class SnipResource {
     log.info("snipLink...{}", snipLink);
     ResponseVM response = new ResponseVM();
     response.setData(snipService.readSnip(snipLink));
-    //    log.info("response....{}", response);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
