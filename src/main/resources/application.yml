@@ -16,7 +16,7 @@ spring:
       ddl-auto: update
 application:
   file:
-    resource: json
+    resource: txt
   store:
     hadoop:
       default-fs: hdfs://localhost:9000

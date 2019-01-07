@@ -48,10 +48,16 @@ public class SnipResource {
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
-  @DeleteMapping("/delete")
+  @PostMapping("/archiveExpiredSnips")
   @ResponseStatus(HttpStatus.OK)
-  public String deleteContent() {
-    return snipService.deleteSnip();
+  public String archiveExpiredContent() {
+    return snipService.archiveExpiredSnips();
+  }
+
+  @PostMapping("/deleteSnipFromStorage")
+  @ResponseStatus(HttpStatus.OK)
+  public String deleteSnipFromStorage() {
+    return snipService.deleteSnipFromStorage();
   }
 
 }

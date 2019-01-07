@@ -17,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ public class SnipService {
     return fileResourceType.readFromFile(snipInfo.getPastePath());
   }
 
-  public String deleteSnip() {
+  public String archiveExpiredSnips() {
     List<SnipInfo> list = snipRepository.findAll();
     List<Long> ids = new ArrayList<>();
     list.forEach(snip -> {
@@ -84,11 +86,35 @@ public class SnipService {
       log.info("minutes....{} ", minutes);
       if (minutes > snip.getExpirationLength() && (!snip.isArchived())) {
         snip.setArchived(true);
+        snip.setLastModifiedDate(LocalDateTime.now(ZoneId.of("UTC")));
         snipRepository.save(snip);
         ids.add(snip.getId());
       }
     });
-    return "Deleted " + ids.stream().
+    return "Archived id list " + ids.stream().
+      map(Objects::toString).
+      collect(Collectors.joining(Constants.COMMA_SEPARATOR));
+  }
+
+  public String deleteSnipFromStorage() {
+    List<SnipInfo> list = snipRepository.findAllByIsArchived(true);
+    List<Long> expiredIds = new ArrayList<>();
+    list.forEach(expiredSnip -> {
+      LocalDateTime lastModifiedTs = expiredSnip.getLastModifiedDate();
+      LocalDateTime currentTs = webUtility.getCurrentTimeStamp();
+      long days = lastModifiedTs.until(currentTs, ChronoUnit.DAYS);
+      if (days > 7) {
+        String filePath = expiredSnip.getPastePath();
+        File file = new File(filePath);
+        if (file.delete()) {
+          log.info("File is deleted successfully");
+          expiredIds.add(expiredSnip.getId());
+        } else {
+          log.info("File doesn't exists");
+        }
+      }
+    });
+    return "Deleted Snips List " + expiredIds.stream().
       map(Objects::toString).
       collect(Collectors.joining(Constants.COMMA_SEPARATOR));
   }
