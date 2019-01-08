@@ -41,7 +41,7 @@ public class SnipService {
   public SnipService(
     SnipRepository snipRepository,
     WebUtility webUtility, StoreType<String> storeType,
-    @Qualifier("json") FileResourceType<String> fileResourceType) {
+    @Qualifier("${application.file.resource}") FileResourceType<String> fileResourceType) {
     this.snipRepository = snipRepository;
     this.webUtility = webUtility;
     this.storeType = storeType;

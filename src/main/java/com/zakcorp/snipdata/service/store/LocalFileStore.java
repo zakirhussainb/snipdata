@@ -24,16 +24,16 @@ public class LocalFileStore implements StoreType<String> {
   @Autowired
   private final WebUtility webUtility;
 
-  @Autowired
-  @Qualifier("json")
-  private final FileResourceType<String> fileResourceType;
-
   @Value("${application.file.resource}")
   private String fileResource;
 
+  @Autowired
+  @Qualifier("${application.file.resource}")
+  private final FileResourceType<String> fileResourceType;
+
   public LocalFileStore(
     WebUtility webUtility,
-    @Qualifier("json") FileResourceType<String> fileResourceType) {
+    @Qualifier("${application.file.resource}") FileResourceType<String> fileResourceType) {
     this.webUtility = webUtility;
     this.fileResourceType = fileResourceType;
   }
