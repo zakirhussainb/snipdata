@@ -16,7 +16,10 @@ spring:
       ddl-auto: update
 application:
   file:
-    resource: json
+    resource: parquet
+  schema:
+    avro:
+      path: /snipSchema.avsc
   store:
     hadoop:
       default-fs: hdfs://localhost:9000

@@ -20,7 +20,9 @@ import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,10 +32,10 @@ import java.io.IOException;
 @Qualifier("parquet")
 public class ParquetResource implements FileResourceType<String> {
 
-  private static final File SCHEMA_LOC = new File(
-    "//home//xedflix//zakir-local//mission//projects//snipdata//src//main//resources//snipSchema.avsc");
-
   private final WebUtility webUtility;
+
+  @Value("${application.schema.avro.path}")
+  private String path;
 
   @Autowired
   public ParquetResource(WebUtility webUtility) {
@@ -42,7 +44,8 @@ public class ParquetResource implements FileResourceType<String> {
 
   @Override
   public String storeToFile(String dirPath, String fileName, String content) throws IOException {
-    Schema schema = new Schema.Parser().parse(SCHEMA_LOC);
+    File file = new File(this.getClass().getResource(path).getFile());
+    Schema schema = new Schema.Parser().parse(file);
     GenericRecord data = new GenericData.Record(schema);
     data.put(Constants.CONTENT, content);
     String filePath = dirPath + Constants.DELIMITER + fileName;
