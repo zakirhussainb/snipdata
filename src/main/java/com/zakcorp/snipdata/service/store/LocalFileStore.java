@@ -19,13 +19,14 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Qualifier("local")
 public class LocalFileStore implements StoreType<String> {
 
   @Autowired
   private final WebUtility webUtility;
 
   @Value("${application.file.resource}")
-  private String fileResource;
+  private String folderName;
 
   @Autowired
   @Qualifier("${application.file.resource}")
@@ -41,9 +42,9 @@ public class LocalFileStore implements StoreType<String> {
   @Override
   public String saveToStorage(String content) throws IOException {
     String dirPath =
-      webUtility.getStorageLocationPrefix() + Constants.DELIMITER + fileResource +
+      webUtility.getStorageLocationPrefix() + Constants.DELIMITER + folderName +
         webUtility.getDatePrefix();
-    String fileName = webUtility.getRandomUUID() + Constants.DOT + fileResource;
+    String fileName = webUtility.getRandomUUID() + Constants.DOT + folderName;
     return fileResourceType.storeToFile(dirPath, fileName, content);
   }
 }

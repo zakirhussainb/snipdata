@@ -40,7 +40,7 @@ public class SnipService {
   @Autowired
   public SnipService(
     SnipRepository snipRepository,
-    WebUtility webUtility, StoreType<String> storeType,
+    WebUtility webUtility, @Qualifier("${application.store.type}") StoreType<String> storeType,
     @Qualifier("${application.file.resource}") FileResourceType<String> fileResourceType) {
     this.snipRepository = snipRepository;
     this.webUtility = webUtility;

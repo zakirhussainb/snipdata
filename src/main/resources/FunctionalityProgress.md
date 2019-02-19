@@ -11,4 +11,4 @@
 
 # Implement HDFS, AWS and GCP Storage mechanism
 
-# read resource snipSchema using getResource()
+# read resource snipSchema using getResource() --done

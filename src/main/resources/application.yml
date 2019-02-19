@@ -21,6 +21,7 @@ application:
     avro:
       path: /snipSchema.avsc
   store:
+    type: hdfs
     hadoop:
       default-fs: hdfs://localhost:9000
-    path: /home/xedflix/snips
+    path: /snips
