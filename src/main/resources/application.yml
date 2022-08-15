@@ -1,0 +1,27 @@
+server:
+  port: 8888
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/content
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update
+application:
+  file:
+    resource: parquet
+  schema:
+    avro:
+      path: /snipSchema.avsc
+  store:
+    type: hdfs
+    hadoop:
+      default-fs: hdfs://localhost:9000
+    path: /snips
